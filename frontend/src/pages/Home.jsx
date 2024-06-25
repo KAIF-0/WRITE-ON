@@ -21,7 +21,7 @@ const Home = () => {
     try {
       const res = await fetch(`/app/get-posts?limit=1&index=${count}`);
       const data = await res.json();
-      // console.log(data)
+      console.log(data)
       if (res.ok) {
         setpostData(data.posts);
         setend(data.totalPosts);
