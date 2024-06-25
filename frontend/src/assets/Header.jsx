@@ -13,7 +13,6 @@ const Navbar = () => {
   const { presentUser } = useSelector((state) => state.user)
   const [isOpen, setIsOpen] = useState(false);
   const [search, setsearch] = useState("")
-  console.log(search)
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -21,9 +20,6 @@ const Navbar = () => {
     if (term) {
       setsearch(term)
     }
-
-    // console.log(term)
-
   }, [location.search])
 
 
@@ -43,13 +39,10 @@ const Navbar = () => {
         });
 
       const data = await res.json()
-      console.log(data)
-      if (data.success === false) {
-        console.log(data.errorMessage)
-      } else {
+      if (res.ok) {
         dispatch(signoutSuccess());
         navigate('/login');
-      }
+      } 
 
     } catch (error) {
       console.log(error.message)

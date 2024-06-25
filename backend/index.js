@@ -9,6 +9,7 @@ import { errorMiddleware } from "./middleware/error.js"
 import cors from "cors"
 import bodyparser from "body-parser"
 import cookieParser from "cookie-parser"
+import path from "path"
 
 
 dotenv.config();
@@ -33,9 +34,7 @@ mongoose.connect(process.env.MONGO_STRING)
 )
 
 
-// app.get('/', (req, res) => {
-//   res.json({Hello: "World"})
-// })
+const __dirname = path.resolve();
 
 
 app.use('/app', authRoutes)
@@ -43,6 +42,12 @@ app.use('/app', userRoutes)
 app.use('/app', postRoutes)
 app.use('/app', commentRoutes)
 
+
+//frontend static folder(for render)
+app.use(express.static(path.join(__dirname, '/frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+  });
 
 //middleware for error
 app.use(errorMiddleware)

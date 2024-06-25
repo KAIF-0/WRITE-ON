@@ -1,15 +1,13 @@
 import { Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import GoogleButton from '@/assets/oAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInFailure, signInSuccess } from '@/redux/user/userSlice.js';
 
 const SignUp = () => {
-const {loading, errorMessage, presentUser} = useSelector((state)=> state.user);
-const dispatch = useDispatch();
+  const { loading, errorMessage, presentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     username: '',
@@ -36,61 +34,22 @@ const dispatch = useDispatch();
           body: JSON.stringify(form),
         });
       const data = await res.json()
-      console.log(data)
       if (data.success === false) {
         dispatch(signInFailure(data.errorMessage));
-        // console.log(errorMessage)
-        toast(errorMessage + "...", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
       }
 
       if (data.success !== false) {
         dispatch(signInSuccess(data));
-        console.log(presentUser)
-        toast("USER CREATED...", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
         navigate('/signin')
       }
-      
-    } catch (error) {
-dispatch(signInFailure(error.message))
-    }
-    
 
-    console.log(form);
+    } catch (error) {
+      dispatch(signInFailure(error.message))
+    }
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition="Bounce"
-      />
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white shadow-md min-h-[70vh] flex justify-center items-center flex-col rounded-lg p-8 mx-5 max-w-md w-full">
           <div className="flex justify-center mb-6">
@@ -153,12 +112,12 @@ dispatch(signInFailure(error.message))
             >
               {loading ? (
                 <>
-                <Spinner size='sm' color='white'></Spinner>
-                <span className='pl-2'>Loading...</span>
+                  <Spinner size='sm' color='white'></Spinner>
+                  <span className='pl-2'>Loading...</span>
                 </>
               ) : "SIGN UP"}
             </button>
-            <GoogleButton/>
+            <GoogleButton />
             <div className="text-center mt-4">
               <Link to="/signin" className="text-black hover:underline">
                 Already have an account? Sign in

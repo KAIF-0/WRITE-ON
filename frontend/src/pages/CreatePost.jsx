@@ -3,8 +3,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, uploadBytesResumable, getStorage, ref } from "firebase/storage";
 import { app } from '@/firebase';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
@@ -33,42 +31,13 @@ const CreatePost = () => {
                 });
 
             const data = await res.json()
-            console.log(data)
-
-            if (!res.ok) {
-                // dispatch(updateFailure(data.errorMessage));
-                toast(errorMessage + "...", {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            }
-
-            if (res.ok) {
-                // dispatch(updateSuccess(data));
-                // console.log(presentUser)
-                toast("POST SUCCESFULL...", {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+            if(res.ok){
                 navigate(`/post/${data.slug}`)
             }
+
         } catch (error) {
-            console.log(error.message)
-            // dispatch(updateFailure(error.errorMessage));
+            console.log(error.message)      
         }
-    //   console.log(form)
     }
 
     const handleUploadFile = async () => {
@@ -86,7 +55,6 @@ const CreatePost = () => {
                 (error) => {
                     setFileUploadError('Upload Fail...')
                     setFileUploadProgress(null);
-                    console.log(fileUploadError)
 
                 },
                 () => {
@@ -115,20 +83,7 @@ const CreatePost = () => {
 
     return (
         <>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition="Bounce"
-            />
-            <div className="flex justify-center mx-5 items-center min-h-screen bg-white text-white">
+            <div className="flex my-10 justify-center mx-5 items-center min-h-screen bg-white text-white">
                 <div className="w-full max-w-screen-md bg-gray-700 p-6 rounded-lg shadow-lg">
                     <h2 className="text-3xl font-semibold mb-4">Create a post</h2>
                     <form onSubmit={handlePublish} >

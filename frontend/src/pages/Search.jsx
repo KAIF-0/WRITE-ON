@@ -4,13 +4,11 @@ import { Link, useLocation } from 'react-router-dom';
 
 const SearchPage = () => {
     const location = useLocation();
-    console.log(location.search)
     const [search, setsearch] = useState({
         "search": "",
         "category": "",
         "order": " "
     })
-    // console.log(search)
     const [searchResult, setSearchResult] = useState([])
     const [showMore, setshowMore] = useState(true)
 
@@ -49,7 +47,6 @@ const SearchPage = () => {
         try {
             const res = await fetch(`/app/get-posts?search=${search.search}&sorting=${search.order}&category=${search.category}&index=${index}`)
             const data = await res.json()
-            // console.log(data)
             if (res.ok) {
                 setSearchResult([...searchResult, ...data.posts])
                 setshowMore(false)

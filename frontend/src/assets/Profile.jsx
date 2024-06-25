@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { getDownloadURL, uploadBytesResumable, getStorage, ref } from "firebase/storage";
 import { app } from '@/firebase';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { updateStart, updateSuccess, updateFailure, deleteFailure, deleteStart, deleteSuccess, signoutSuccess } from '@/redux/user/userSlice.js';
 import { Modal, Button, Spinner } from "flowbite-react";
@@ -28,7 +26,6 @@ const Profile = () => {
     const [imageUploadProgress, setimageUploadProgress] = useState(null)
     const [imageUploadError, setimageUploadError] = useState(null)
     const r = useRef()
-    // console.log(form)
 
 
     const handleChange = async (e) => {
@@ -37,10 +34,6 @@ const Profile = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        // if(Object.keys(form).length === 0){
-        //     return;
-        // }
-        // console.log(form)
         try {
             dispatch(updateStart());
             const res = await fetch(`/app/update/${presentUser._id}`,
@@ -53,10 +46,8 @@ const Profile = () => {
                 });
 
             const data = await res.json()
-            // console.log(data)
             if (res.ok) {
                 dispatch(updateSuccess(data));
-                // navigate('/home')
             }
 
             if (!res.ok) {
@@ -79,17 +70,15 @@ const Profile = () => {
                 });
 
             const data = await res.json()
-            // console.log(data)
             if (data.success === false) {
                 dispatch(deleteFailure(data.errorMessage));
             }
 
             if (res.ok) {
                 dispatch(deleteSuccess(data));
-                // navigate('/home')
+                navigate('/signup')
             }
 
-            console.log(data);
         } catch (error){
             dispatch(deleteFailure(error.message));
         }
@@ -103,10 +92,7 @@ const Profile = () => {
                 });
 
             const data = await res.json()
-            // console.log(data)
-            if (data.success === false) {
-                console.log(data.errorMessage)
-            } else {
+            if (res.ok) {
                 dispatch(signoutSuccess());
             }
 
@@ -154,7 +140,6 @@ const Profile = () => {
             (error) => {
                     setimageUploadError('Upload Fail...');
                     setimageUploadProgress(null);
-                    console.log(imageUploadError)
     
                 },
                async () => {
@@ -171,14 +156,6 @@ const Profile = () => {
                 }
             ); 
     }
-
-    console.log(form)
-
-
-
-
-
-
 
 
     return (

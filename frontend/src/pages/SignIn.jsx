@@ -1,8 +1,6 @@
 import { Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInFailure, signInSuccess } from '@/redux/user/userSlice.js';
 import GoogleButton from '@/assets/oAuth';
@@ -36,60 +34,23 @@ const SignIn = () => {
         });
 
       const data = await res.json()
-      console.log(data)
 
       if (data.success === false) {
         dispatch(signInFailure(data.errorMessage));
-        toast(errorMessage + "...", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
       }
 
       if (data.success !== false) {
         dispatch(signInSuccess(data));
-        // console.log(presentUser)
-        toast("SIGN IN SUCCESFULL...", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
         navigate('/dashboard?tab=profile')
       }
 
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
-
-    console.log(form);
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition="Bounce"
-      />
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white shadow-md min-h-[70vh] flex justify-center items-center flex-col rounded-lg p-8 mx-5 max-w-md w-full">
           <div className="flex justify-center mb-6">

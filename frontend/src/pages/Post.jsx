@@ -15,10 +15,6 @@ const Post = () => {
             const data = await res.json()
             if (res.ok) {
                 setpostData(data.posts[0])
-                // console.log(postData)
-            }
-            if (!res.ok) {
-                console.log("CAN'T GET POST")
             }
         } catch (error) {
             console.log(error)

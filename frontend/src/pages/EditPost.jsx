@@ -3,8 +3,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, uploadBytesResumable, getStorage, ref } from "firebase/storage";
 import { app } from '@/firebase';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -12,9 +10,8 @@ import { useSelector } from 'react-redux';
 const EditPost = () => {
     const {presentUser} = useSelector((state)=>state.user)
     const {postId} = useParams();
-    // console.log(postId)
     const [form, setform] = useState({});
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [file, setFile] = useState(null);
     const [fileUploadProgress, setFileUploadProgress] = useState(null)
     const [fileUploadError, setFileUploadError] = useState(null)
@@ -32,11 +29,11 @@ const EditPost = () => {
                 });
 
             const data = await res.json()
-            console.log(data)
             if (res.ok) {
                 setform(data)
+                navigate(`/post/${data.slug}`)
             }
-            // navigate(`/post/${data.slug}`)
+            
         } catch (error) {
             console.log(error.message)
         }
@@ -48,16 +45,13 @@ const EditPost = () => {
         const getPost = async () => {
             try {
                 const res = await fetch(`/app/get-posts?postId=${postId}`)
-                const data = await res.json()
-                // console.log(data) 
+                const data = await res.json() 
                 if (res.ok) {
                   setform(data.posts[0]) 
-                //  console.log(data.posts[0].image)
                 }
               } catch (error) {  
                 console.log(error.message)
               }
-        //   console.log(form)
         };
       getPost()
     }, [postId])
@@ -78,7 +72,6 @@ const EditPost = () => {
                 (error) => {
                     setFileUploadError('Upload Fail...')
                     setFileUploadProgress(null);
-                    console.log(fileUploadError)
 
                 },
                 () => {
@@ -99,25 +92,8 @@ const EditPost = () => {
         }
     }
 
-
-console.log(form)
-
-
     return (
         <>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition="Bounce"
-            />
             <div className="flex justify-center mx-5 items-center min-h-screen bg-white my-10 text-white">
                 <div className="w-full max-w-screen-md bg-gray-700 p-6 rounded-lg shadow-lg">
                     <h2 className="text-3xl font-semibold mb-4">Edit a post</h2>

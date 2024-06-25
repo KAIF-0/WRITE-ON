@@ -16,7 +16,6 @@ const Dashboard = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
     const tabOpened = urlParams.get('tab')
-    // console.log(tabOpened)
     if (tabOpened) {
       setTab(tabOpened)
     }

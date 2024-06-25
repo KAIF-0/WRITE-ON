@@ -17,7 +17,6 @@ const DashPosts = () => {
     try {
       const res = await fetch(`/app/get-posts?userId=${presentUser._id}`)
       const data = await res.json()
-      // console.log(data.posts)
       if (res.ok) {
         setpostData(data.posts)
       }
@@ -38,7 +37,6 @@ const DashPosts = () => {
     try {
       const res = await fetch(`/app/get-posts?userId=${presentUser._id}&index=${index}`)
       const data = await res.json()
-      // console.log(data.posts)
       if (res.ok) {
         setpostData([...postData, ...data.posts])
         setshowMore(false)
@@ -49,7 +47,6 @@ const DashPosts = () => {
   }
 
   const handleDelete = async () => {
-    console.log('POST DELETED')
     setOpenModal(false)
     try {
       const res = await fetch(`/app/delete-post/${presentUser._id}/${deleteId}`,
@@ -88,16 +85,20 @@ const DashPosts = () => {
               </thead>
               <tbody>
                 {postData.map((post) => (
-                  <tr onClick={() => handleRouting(post.slug)} key={post._id} className="border-b border-gray-200 shadow-sm hover:bg-gray-200">
+
+                  <tr key={post._id} className="border-b border-gray-200 shadow-sm hover:bg-gray-200">
+
                     <td className="py-2 px-4 text-center">{new Date(post.createdAt).toLocaleDateString()}</td>
                     <td className="py-2 px-4 text-center">
-                      <img src={post.image} alt={post.title} className="h-16 w-16 object-cover mx-auto" />
+                      <Link to={`/post/${post.slug}`}> <img src={post.image} alt={post.title} className="h-16 w-16 object-cover mx-auto" /></Link>
                     </td>
                     <td className="py-2 px-4 text-center">{post.title}</td>
                     <td className="py-2 px-4 text-center">{post.category}</td>
                     <td onClick={() => { setOpenModal(true), setdeleteId(post._id) }} className="py-2 px-4 text-center text-red-500 cursor-pointer hover:underline">Delete</td>
                     <td className="py-2 px-4 text-center text-blue-500 cursor-pointer hover:underline"> <Link to={`/edit-post/${post._id}`}>Edit</Link></td>
+
                   </tr>
+
                 ))}
               </tbody>
 

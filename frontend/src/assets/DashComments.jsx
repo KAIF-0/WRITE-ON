@@ -14,7 +14,6 @@ const DashComments = () => {
         try {
             const res = await fetch('/app/getComments')
             const data = await res.json()
-            console.log(data)
             if (res.ok) {
 
                 setcommentData(data.comments)
@@ -36,7 +35,6 @@ const DashComments = () => {
         try {
             const res = await fetch(`/app/getComments?index=${index}`)
             const data = await res.json()
-            // console.log(data)
             if (res.ok) {
                 setcommentData([...commentData, ...data.comments])
                 setshowMore(false)
@@ -48,7 +46,6 @@ const DashComments = () => {
 
 
     const handleDelete = async () => {
-        // console.log(commentId)
         try {
             const res = await fetch(`/app/deleteDashComment/${deleteId}`
                 ,
@@ -58,7 +55,6 @@ const DashComments = () => {
             if (res.ok) {
                 const data = await res.json();
                 setcommentData(commentData.filter((e) => e._id !== deleteId))
-                console.log(data)
             }
 
         } catch (error) {

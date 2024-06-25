@@ -11,10 +11,7 @@ const RecentPost = ({ limit }) => {
             const data = await res.json();
             if (res.ok) {
                 setRecentPost(data.posts);
-                console.log(data.posts);
-            } else {
-                console.log("CAN'T GET POST");
-            }
+            } 
         } catch (error) {
             console.log(error);
         }

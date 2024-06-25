@@ -1,6 +1,4 @@
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth"
 import { app } from "../firebase.js"
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,20 +36,8 @@ const GoogleButton = () => {
             const data = await res.json()
             if (data.success !== false) {
                 dispatch(signInSuccess(data));
-                // console.log(presentUser)
-                toast("SIGN IN SUCCESFULL...", {
-                  position: "top-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "light",
-                });
                 navigate('/dashboard/?tab=profile')
             }
-            console.log(resultsFromGoogle)
         } catch (error) {
             console.log(error.message)
         }

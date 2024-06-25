@@ -19,7 +19,6 @@ const DashUsers = () => {
         try {
             const res = await fetch(`/app/get-users/${presentUser._id}`)
             const data = await res.json()
-            // console.log(data)
             setuserData(data.removePass)
             if (data.removePass.length < 7) {
                 setshowMore(false);
@@ -38,7 +37,6 @@ const DashUsers = () => {
         try {
             const res = await fetch(`/app/get-users/${presentUser._id}?index=${index}`)
             const data = await res.json()
-            console.log(data.removePass)
             if (res.ok) {
                 setuserData([...userData, ...data.removePass])
                 setshowMore(false)
@@ -49,7 +47,6 @@ const DashUsers = () => {
     }
 
     const handleDelete = async () => {
-        console.log('USER DELETED')
         setOpenModal(false)
         try {
             const res = await fetch(`/app/delete-user/${presentUser._id}/${deleteId}`,

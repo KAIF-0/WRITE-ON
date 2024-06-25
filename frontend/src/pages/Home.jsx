@@ -21,13 +21,10 @@ const Home = () => {
     try {
       const res = await fetch(`/app/get-posts?limit=1&index=${count}`);
       const data = await res.json();
-      console.log(data)
       if (res.ok) {
         setpostData(data.posts);
         setend(data.totalPosts);
-      } else {
-        console.log("CAN'T GET POST");
-      }
+      } 
     } catch (error) {
       console.log(error);
     }

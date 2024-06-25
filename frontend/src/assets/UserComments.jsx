@@ -5,17 +5,11 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 
 const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
-    // console.log(comment)
-
     const { presentUser } = useSelector((state) => state.user)
     const [userData, setuserData] = useState({})
     const [editingComment, seteditingComment] = useState(false)
     const [newComment, setnewComment] = useState({ "content": "" })
     const [openModal, setOpenModal] = useState(false);
-
-    // console.log("userData")
-
-
 
     useEffect(() => {
 
@@ -36,7 +30,6 @@ const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
 
     const handleChange = async (e) => {
         setnewComment({ ...newComment, [e.target.name]: e.target.value })
-        // console.log(newComment)
     };
 
     const handleEdit = async () => {

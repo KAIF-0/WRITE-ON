@@ -18,10 +18,8 @@ const Comments = ({ postId }) => {
             try {
                 const res = await fetch(`/app/get-comments/${postId}`)
                 const data = await res.json()
-                // console.log(data) 
                 if (res.ok) {
                     setcommentData(data)
-                    // console.log(data)
                 }
             } catch (error) {
                 console.log(error.message)
@@ -52,9 +50,7 @@ const Comments = ({ postId }) => {
 
             const data = await res.json()
             if (res.ok) {
-                // console.log(data)
                 setcommentData([data, ...commentData])
-                // console.log(commentData)
                 setComment('');
             }
 
@@ -83,14 +79,13 @@ const Comments = ({ postId }) => {
 
                 setcommentData(commentData.map((comment) => {
                     if (comment._id === commentId) {
-                        console.log(data)
                         return { ...comment, ...data };
                     } else {
                         return comment;
                     }
 
                 }));
-                // console.log(commentData)
+
 
             }
 
@@ -116,7 +111,6 @@ const Comments = ({ postId }) => {
 
                 setcommentData(commentData.map((comment) => {
                     if (comment._id === commentId) {
-                        console.log(data)
                         return { ...comment, content: content };
                     } else {
                         return comment;
@@ -131,7 +125,6 @@ const Comments = ({ postId }) => {
     }
 
     const handleDelete = async (commentId) => {
-        console.log(commentId)
         try {
             const res = await fetch(`/app/deleteComment/${commentId}`
                 ,
@@ -141,7 +134,6 @@ const Comments = ({ postId }) => {
             if (res.ok) {
                 const data = await res.json();
                 setcommentData(commentData.filter((e) => e._id !== commentId))
-                console.log(data)
             }
 
         } catch (error) {
