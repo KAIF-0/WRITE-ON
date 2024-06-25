@@ -43,10 +43,10 @@ app.use('/app', postRoutes)
 app.use('/app', commentRoutes)
 
 
-//frontend static folder(for render deployment)
-app.use(express.static(path.join(__dirname, '/frontend/dist')));
+//frontend static folder(for render)
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname,  '../frontend/dist/index.html'));
   });
 
 //middleware for error
