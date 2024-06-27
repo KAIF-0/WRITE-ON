@@ -16,8 +16,9 @@ const DashPosts = () => {
 
   const getPosts = async () => {
     try {
-      const res = await fetch(`/app/get-posts?userId=${presentUser._id}`)
-      const data = await res.json()
+      if(!presentUser.isAdmin){
+        const res = await fetch(`/app/get-posts?userId=${presentUser._id}`)
+        const data = await res.json()
       if (res.ok) {
         setpostData(data.posts)
       }
@@ -27,6 +28,23 @@ const DashPosts = () => {
       if (!res.ok) {
         toast.error(data.errorMessage);
       }
+    }else{
+      
+        const res = await fetch('/app/get-posts')
+        const data = await res.json()
+      if (res.ok) {
+        setpostData(data.posts)
+      }
+      if (data.posts.length < 7) {
+        setshowMore(false);
+      }
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
+    
+  }
+      
+      
     } catch (error) {
       console.log(error.message)
     }

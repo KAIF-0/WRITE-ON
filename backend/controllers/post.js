@@ -2,9 +2,6 @@ import Post from "../modal/postModal.js"
 import { errorHandler } from "../utils/error.js"
 
 export const createPost = async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return next(errorHandler(403, "NOT ALLOWED TO CREATE A POST..."))
-  }
   if (!req.body.title || !req.body.content) {
     return next(errorHandler(400, "ALL FIELDS ARE REQUIRED..."))
   }
@@ -78,14 +75,11 @@ export const getPost = async (req, res, next) => {
 
 
 export const deletePost = async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return next(errorHandler(403, "NOT ALLOWED TO DELETE POSTS..."))
+  if(!req.user.isAdmin){
+    if (req.user.userid !== req.params.userId) {
+      return next(errorHandler(400, "NOT ALLOWED TO DELETE POST..."))
+    }
   }
-  if (req.user.userid !== req.params.userId) {
-    return next(errorHandler(400, "NOT ALLOWED TO DELETE POSTS..."))
-  }
-
-
   try {
     const post = await Post.findByIdAndDelete(req.params.postId);
     res.status(200).json("POST DELETED SUCCESSFULLY")
@@ -99,11 +93,10 @@ export const deletePost = async (req, res, next) => {
 
 
 export const updatePost = async (req, res, next) => {
-  // if (!req.user.isAdmin) {
-  //   return next(errorHandler(403, "NOT ALLOWED TO UPDATE POSTS..."))
-  // }
-  if (req.user.userid !== req.params.userId) {
-    return next(errorHandler(400, "NOT ALLOWED TO UPDATE POSTS..."))
+  if(!req.user.isAdmin){
+    if (req.user.userid !== req.params.userId) {
+      return next(errorHandler(400, "NOT ALLOWED TO UPDATE POST..."))
+    }
   }
   try {
     if(req.body.title){

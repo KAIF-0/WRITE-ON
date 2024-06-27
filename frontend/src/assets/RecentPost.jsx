@@ -58,7 +58,7 @@ const RecentPost = ({ limit }) => {
                 {recentPost.map((post, index) => (
                     <div
                         key={index}
-                        className="group bg-white rounded-lg shadow-md overflow-hidden transform transition hover:scale-105"
+                        className="group flex flex-col items-center bg-white rounded-lg shadow-md overflow-hidden transform transition hover:scale-105"
                     >
                         <img
                             className="w-full h-48 object-cover"

@@ -89,6 +89,7 @@ const EditPost = () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                         setform({ ...form, image: downloadURL })
                         setFileUploadProgress(false);
+                        toast.success("Image Changed")
                     });
                     { !fileUploadProgress && toast.dismiss(toastId) }
 
@@ -104,7 +105,7 @@ const EditPost = () => {
     return (
         <>
             <Toaster />
-            <div className="flex justify-center mx-5 items-center min-h-screen bg-white  text-white">
+            <div className="flex justify-center my-10 mx-5 items-center min-h-screen bg-white  text-white">
                 <div className="w-full max-w-screen-md bg-gray-300 p-6 rounded-lg shadow-lg">
                     <h2 className="text-3xl font-semibold mb-4">Edit a post</h2>
                     <form onSubmit={handleUpdate} >

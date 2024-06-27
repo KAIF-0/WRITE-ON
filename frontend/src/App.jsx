@@ -32,8 +32,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/post/:slug" element={<Post />} />
-          <Route path="/create-post" element={presentUser && presentUser.isAdmin ? <CreatePost /> : <Navigate to="/signin" replace />} />
-          <Route path="/edit-post/:postId" element={presentUser && presentUser.isAdmin ? <EditPost /> : <Navigate to="/signin" replace />} />
+          <Route path="/create-post" element={presentUser  ? <CreatePost /> : <Navigate to="/signin" replace />} />
+          <Route path="/edit-post/:postId" element={presentUser  ? <EditPost /> : <Navigate to="/signin" replace />} />
         </Routes>
         <Footer />
       </BrowserRouter>

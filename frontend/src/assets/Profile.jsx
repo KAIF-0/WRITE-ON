@@ -258,7 +258,7 @@ const Profile = () => {
                             Sign out
                         </button>
                     </div>
-                    {presentUser.isAdmin && <Link to={'/create-post'}>
+                    {presentUser && <Link to={'/create-post'}>
                         <button className="min-w-full px-4 py-2 mt-5 text-white bg-gray-700 rounded-md hover:bg-gray-900 focus:outline-none focus:bg-gray-700" >
                             {loading ? (
                                 <>
