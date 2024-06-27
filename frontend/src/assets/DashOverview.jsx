@@ -4,7 +4,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { LiaCommentsSolid } from "react-icons/lia";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
 
@@ -13,12 +13,20 @@ const DashOverview = () => {
     const [userData, setuserData] = useState([])
     const [commentData, setcommentData] = useState([])
     const [postData, setpostData] = useState([])
+    const navigate = useNavigate();
 
     const [overviewStats, setoverviewStats] = useState([
         { label: "TOTAL USERS", value: '', change: "+8", period: "Last month", icon: <FaUserFriends /> },
         { label: "TOTAL COMMENTS", value: '', change: "+1", period: "Last month", icon: <LiaCommentsSolid /> },
         { label: "TOTAL POSTS", value: '', change: "+13", period: "Last month", icon: <MdOutlinePostAdd /> },
     ]);
+
+    useEffect(() => {
+      if(!presentUser.isAdmin){
+        navigate('/')
+      }
+    }, [])
+    
 
 
     const getUsers = async () => {

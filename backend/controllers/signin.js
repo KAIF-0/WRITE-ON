@@ -8,17 +8,17 @@ export const signIn = async (req, res, next)=>{
     const { email, password } = req.body
 
     if(email=== ''|| password==='' || !email || !password){
-        next(errorHandler(400, "All FIELD ARE REQUIRED"))
+        next(errorHandler(400, "ALL FIELDS ARE REQUIRED!"))
     }
 
     try {
         const getUser = await userModal.findOne({email})
         if(!getUser){
-            next(errorHandler(404, "USER NOT FOUND"))
+            next(errorHandler(404, "USER NOT FOUND!"))
         }
         const getPass = await bcryptjs.compare(password, getUser.password)
         if(!getPass){
-            next(errorHandler(400, "USER NOT FOUND"))
+            next(errorHandler(400, "USER NOT FOUND!"))
         }
         const token = jwt.sign(
             {userid: getUser._id, isAdmin: getUser.isAdmin },

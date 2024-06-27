@@ -5,6 +5,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { CiCircleRemove } from "react-icons/ci";
 import { CiCircleCheck } from "react-icons/ci";
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -14,6 +15,13 @@ const DashUsers = () => {
     const [showMore, setshowMore] = useState(true)
     const [openModal, setOpenModal] = useState(false);
     const [deleteId, setdeleteId] = useState('')
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!presentUser.isAdmin){
+          navigate('/')
+        }
+      }, [])
 
     const getUsers = async () => {
         try {

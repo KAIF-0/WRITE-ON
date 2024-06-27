@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Spinner } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 const DashComments = () => {
@@ -9,8 +11,14 @@ const DashComments = () => {
     const [commentData, setcommentData] = useState([])
     const [openModal, setOpenModal] = useState(false);
     const [deleteId, setdeleteId] = useState('')
+    const navigate = useNavigate();
+    const { presentUser } = useSelector((state) => state.user);
 
-
+    useEffect(() => {
+        if(!presentUser.isAdmin){
+          navigate('/')
+        }
+      }, [])
 
     const getDashComments = async () => {
         try {

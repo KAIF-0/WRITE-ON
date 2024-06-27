@@ -3,7 +3,7 @@ import { errorHandler } from "../utils/error.js"
 
 export const createPost = async (req, res, next) => {
   if (!req.body.title || !req.body.content) {
-    return next(errorHandler(400, "ALL FIELDS ARE REQUIRED..."))
+    return next(errorHandler(400, "ALL FIELDS ARE REQUIRED!"))
   }
 
   const slug = req.body.title.split(' ').join('-').toLowerCase()
@@ -77,7 +77,7 @@ export const getPost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
   if(!req.user.isAdmin){
     if (req.user.userid !== req.params.userId) {
-      return next(errorHandler(400, "NOT ALLOWED TO DELETE POST..."))
+      return next(errorHandler(400, "NOT ALLOWED TO DELETE POST!"))
     }
   }
   try {
@@ -95,7 +95,7 @@ export const deletePost = async (req, res, next) => {
 export const updatePost = async (req, res, next) => {
   if(!req.user.isAdmin){
     if (req.user.userid !== req.params.userId) {
-      return next(errorHandler(400, "NOT ALLOWED TO UPDATE POST..."))
+      return next(errorHandler(400, "NOT ALLOWED TO UPDATE POST!"))
     }
   }
   try {

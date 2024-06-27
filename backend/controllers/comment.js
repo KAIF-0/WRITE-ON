@@ -6,7 +6,7 @@ export const createPostComment = async (req, res, next) => {
         const { content, postId, userId } = req.body;
 
         if (userId !== req.user.userid) {
-            return next(errorHandler(403, 'Not allowed to add comment...'));
+            return next(errorHandler(403, 'NOT ALLOWED TO ADD COMMENT!'));
         }
 
         const comments = await Comment.create({
@@ -25,7 +25,7 @@ export const createPostComment = async (req, res, next) => {
 
 export const getPostComment = async (req, res, next) => {
     if (!req.params.postId) {
-        return next(errorHandler(400, 'Post id is required...'))
+        return next(errorHandler(400, 'POST ID IS REQUIRED!'))
     }
     try {
         const comment = await Comment.find({ postId: req.params.postId })
@@ -48,7 +48,7 @@ export const commentLike = async (req, res, next) => {
         const { userid } = req.user;
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return next(errorHandler(404, 'Comment not found...'))
+            return next(errorHandler(404, 'COMMENT NOT FOUND!'))
         }
 
 
@@ -75,10 +75,10 @@ export const editComment = async (req, res, next) => {
         const { userid } = req.user;
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return next(errorHandler(404, 'Comment not found...'))
+            return next(errorHandler(404, 'COMMENT NOT FOUND!'))
         }
         if (comment.userId !== userid) {
-            return next(errorHandler(403, 'You are not authorized to edit this comment...'))
+            return next(errorHandler(403, 'YOU ARE NOT AUTHORIZED TO EDIT COMMENT!'))
         } else {
             const newComment = await Comment.findByIdAndUpdate(commentId, {
                 $set: {
@@ -101,13 +101,13 @@ export const deleteComment = async (req, res, next) => {
         const { userid } = req.user;
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return next(errorHandler(404, 'Comment not found...'))
+            return next(errorHandler(404, 'COMMENT NOT FOUND!'))
         }
         if (comment.userId !== userid) {
-            return next(errorHandler(403, 'You are not authorized to delete this comment...'))
+            return next(errorHandler(403, 'YOU ARE NOT AUTHORIZED TO EDIT COMMENT!'))
         } else {
             await Comment.findByIdAndDelete(commentId);
-            res.status(200).json({ message: 'Comment deleted successfully...' })
+            res.status(200).json({ message: 'COMMENT DELETED SUCCESSFULLY' })
         }
     } catch (error) {
         next(error)
@@ -116,7 +116,7 @@ export const deleteComment = async (req, res, next) => {
 
 export const getDashComment = async (req, res, next) => {
     if (!req.user.isAdmin) {
-        return next(errorHandler(400, 'Not allowed to see comments...'))
+        return next(errorHandler(400, 'NOT ALLOWED TO SEE COMMENTS SECTION!'))
     }
     const index = parseInt(req.query.index) || 0;
     const limit = parseInt(req.query.limit) || 15;
@@ -141,20 +141,20 @@ export const getDashComment = async (req, res, next) => {
 
 export const deleteDashComment = async (req, res, next) => {
     if (!req.user.isAdmin) {
-        return next(errorHandler(400, 'Can not delete comments...'))
+        return next(errorHandler(400, 'NOT AUTHORIZED TO DELETE COMMENT!'))
     }
     try {
         const { commentId } = req.params;
         // const { userid } = req.user;
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return next(errorHandler(404, 'Comment not found...'))
+            return next(errorHandler(404, 'COMMENT NOT FOUND!'))
         }
         // if (comment.userId !== userid) {
         //     return next(errorHandler(403, 'You are not authorized to delete this comment...'))
         // } else {
             await Comment.findByIdAndDelete(commentId);
-            res.status(200).json({ message: 'Comment deleted successfully...' })
+            res.status(200).json({ message: 'COMMENT DELETED SUCCESSFULLY' })
         // }
     } catch (error) {
         next(error)

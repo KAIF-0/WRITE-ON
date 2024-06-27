@@ -8,7 +8,7 @@ export const signUp = async (req, res, next) => {
     const { username, email, password } = req.body
 
     if (!username || !email || !password || username === '' || email === '' || password === '') {
-        next(errorHandler(400, "ALL FIELDS ARE REQUIRED"))
+        next(errorHandler(400, "ALL FIELDS ARE REQUIRED!"))
     }
 
 

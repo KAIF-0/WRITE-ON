@@ -6,22 +6,22 @@ export const updateUser = async (req, res, next) => {
   // const { username, password, email, profilePic} = req.body
 
   if (req.user.userid !== req.params.userId) {
-    return next(errorHandler(403, "Not allowed to update this User."))
+    return next(errorHandler(403, "NOT ALLOWED TO UPDATE USER!"))
   }
 
   if (req.body.password) {
     if (req.body.password < 4) {
-      return next(errorHandler(400, "Password must be at least 6 charecter."))
+      return next(errorHandler(400, "PASSWORD MUST BE ATLEAST 5 CHARECTERS!"))
     }
     req.body.password = bcryptjs.hashSync(req.body.password, 10)
   }
 
   if (req.body.username) {
     if (req.body.username < 3 || req.body.username > 20) {
-      return next(errorHandler(400, "Username must be between 7 to 20 charecter."))
+      return next(errorHandler(400, "USERNAME MUST BE BETWEEN 4 TO 20 CHARECTERS!"))
     }
     if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
-      return next(errorHandler(400, "Username must only contain letter and numbers."))
+      return next(errorHandler(400, "USERNAME MUST ONLY CONTAIN LETTERS AND NUMBERS!"))
     }
   }
 
@@ -49,11 +49,11 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   if (req.user.userid !== req.params.userId) {
-    return next(errorHandler(403, "Not allowed to delete this User."))
+    return next(errorHandler(403, "NOT ALLOWED TO DELETE USER!"))
   }
   try {
     const user = await User.findByIdAndDelete(req.params.userId);
-    res.status(200).json("USER HAS BEEN DELETED...");
+    res.status(200).json("USER HAS BEEN DELETED");
   } catch (error) {
     next(error)
   }
@@ -63,11 +63,11 @@ export const deleteUser = async (req, res, next) => {
 
 export const delUser = async (req, res, next) => {
   if (!req.user.isAdmin || req.user.userid !== req.params.userId) {
-    return next(errorHandler(403, "Not allowed to delete the User."))
+    return next(errorHandler(403, "NOT ALLOWED TO DELETE USER!"))
   }
   try {
     const user = await User.findByIdAndDelete(req.params.delId);
-    res.status(200).json("USER HAS BEEN DELETED...");
+    res.status(200).json("USER HAS BEEN DELETED");
   } catch (error) {
     next(error)
   }
@@ -80,10 +80,10 @@ export const delUser = async (req, res, next) => {
 export const getUsers = async (req, res, next) => {
 
   if (req.user.userid !== req.params.userId) {
-    return next(errorHandler(403, "Not allowed to see Users..."))
+    return next(errorHandler(403, "NOT ALLOWED TO SEE USERS!"))
   }
   if (!req.user.isAdmin) {
-    return next(errorHandler(403, "Not allowed to see Users..."))
+    return next(errorHandler(403, "NOT ALLOWED TO SEE USERS SECTION!"))
   }
 
   const index = parseInt(req.query.index) || 0;
@@ -116,14 +116,9 @@ export const getCommentUser = async (req, res, next) => {
   try {
     const users = await User.findById(req.params.userId)
     if(!users){
-      return next(errorHandler(404, "User not found"))
+      return next(errorHandler(404, "USER NOT FOUND!"))
     }
     const { password: pass, ...editedUsers } = users._doc;
-    // const removePass = users.map((e) => {
-    //   const { password: pass, ...editedUsers } = e._doc;
-    //   return editedUsers;
-    // })
-
     res.status(200).json(editedUsers);
 
   } catch (error) {
