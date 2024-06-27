@@ -116,7 +116,7 @@ export const deleteComment = async (req, res, next) => {
 
 export const getDashComment = async (req, res, next) => {
     if (!req.user.isAdmin) {
-        return next(errorHandler(400, 'Can not fetch comments...'))
+        return next(errorHandler(400, 'Not allowed to see comments...'))
     }
     const index = parseInt(req.query.index) || 0;
     const limit = parseInt(req.query.limit) || 15;

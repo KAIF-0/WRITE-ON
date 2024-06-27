@@ -26,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/projects" element={<Project />} />
-          <Route path="/dashboard" element={presentUser ? <Dashboard /> : <Navigate to="/signin" replace />} />
+          <Route path="/dashboard" element={presentUser && presentUser.isAdmin ? <Dashboard /> : <Navigate to="/" replace />} />
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/signup" element={<SignUp />} />
