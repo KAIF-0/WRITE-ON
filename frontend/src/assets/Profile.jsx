@@ -9,6 +9,7 @@ import { updateStart, updateSuccess, updateFailure, deleteFailure, deleteStart, 
 import { Modal, Button, Spinner } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const Profile = () => {
@@ -23,8 +24,7 @@ const Profile = () => {
     const dispatch = useDispatch();
     const [image, setimage] = useState(null)
     const [imageUrl, setimageUrl] = useState(null)
-    const [imageUploadProgress, setimageUploadProgress] = useState(null)
-    const [imageUploadError, setimageUploadError] = useState(null)
+    const [imageUploadProgress, setimageUploadProgress] = useState(false)
     const r = useRef()
 
 
@@ -48,13 +48,15 @@ const Profile = () => {
             const data = await res.json()
             if (res.ok) {
                 dispatch(updateSuccess(data));
+                toast.success('Profile Updated Successfully')
             }
 
             if (!res.ok) {
+                toast.error(data.errorMessage);
                 dispatch(updateFailure(data.errorMessage));
             }
 
-            
+
         } catch (error) {
             dispatch(updateFailure(error.message));
         }
@@ -70,16 +72,18 @@ const Profile = () => {
                 });
 
             const data = await res.json()
-            if (data.success === false) {
-                dispatch(deleteFailure(data.errorMessage));
-            }
-
+            
             if (res.ok) {
                 dispatch(deleteSuccess(data));
-                navigate('/signup')
+                navigate('/')
+            }
+            if (data.success === false) {
+                dispatch(deleteFailure(data.errorMessage));
+                toast.error(data.errorMessage);
             }
 
-        } catch (error){
+
+        } catch (error) {
             dispatch(deleteFailure(error.message));
         }
     };
@@ -94,6 +98,10 @@ const Profile = () => {
             const data = await res.json()
             if (res.ok) {
                 dispatch(signoutSuccess());
+                navigate('/')
+            }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
             }
 
         } catch (error) {
@@ -127,39 +135,38 @@ const Profile = () => {
         //   }
 
         // For Firebase Storage 
+        const toastId = toast.loading('Updating profilePic...');
         const storage = getStorage(app);
         const nestedFolderPath = 'profilePic'; // Replace with your nested folder path
         const fileName = `${nestedFolderPath}/${new Date().getTime()}_${image.name}`;
         const storageRef = ref(storage, fileName);
         const uploadTask = uploadBytesResumable(storageRef, image)
 
-            uploadTask.on('state_changed', async (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                setimageUploadProgress(progress.toFixed(0))
-            },
+        uploadTask.on('state_changed', async (snapshot) => {
+            setimageUploadProgress(true)
+        },
             (error) => {
-                    setimageUploadError('Upload Fail...');
-                    setimageUploadProgress(null);
-    
-                },
-               async () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setimageUploadProgress(null);
-                        setimageUploadError(null);
-                        setimageUrl(downloadURL)
-                        setform({ ...form, profilePic: downloadURL })
-                        
-                    });
-                    console.log("Image Uploaded Successfully...")
-    
-    
-                }
-            ); 
+                setimageUploadProgress(false);
+                toast.error('Image Update Failed')
+
+            },
+            async () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setimageUrl(downloadURL)
+                    setform({ ...form, profilePic: downloadURL })
+                    setimageUploadProgress(false);
+                    toast.success("ProfilePic Changed")
+
+                });
+                {!imageUploadProgress && toast.dismiss(toastId)}
+            }
+        );
     }
 
 
     return (
         <>
+            <Toaster />
             <div className="flex items-center justify-center min-h-screen w-full bg-gray-100">
                 <div className="w-full mx-5 max-w-md p-8 bg-white shadow-md rounded-md">
                     <h2 className="mb-6 text-2xl font-semibold text-center text-gray-800">PROFILE</h2>

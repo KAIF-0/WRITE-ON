@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Dropdown } from 'flowbite-react';
 import { signoutSuccess } from '@/redux/user/userSlice.js';
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const Navbar = () => {
@@ -41,15 +42,19 @@ const Navbar = () => {
       const data = await res.json()
       if (res.ok) {
         dispatch(signoutSuccess());
-        navigate('/login');
+        navigate('/');
       } 
-
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
     } catch (error) {
       console.log(error.message)
     }
   };
 
   return (
+    <>
+    <Toaster/>
     <nav className="bg-gradient-to-r from-gray-800 to-gray-500 text-white shadow-lg md:w-full">
       <div className="container mx-auto px-4 flex justify-around items-center py-3">
         <div className="flex border border-white rounded-full items-center ">
@@ -123,8 +128,8 @@ const Navbar = () => {
             <Dropdown.Item><Link to={'/dashboard?tab=profile'}>Profile</Link></Dropdown.Item>
             <Dropdown.Item><Link onClick={handleSignOut}>Sign Out</Link></Dropdown.Item>
           </Dropdown>
-        </div>) : (<Link to="/signin" className="border ml-28 border-white  px-4 py-1 rounded-full font-bold hover:bg-white hover:text-black">
-          Sign in
+        </div>) : (<Link to="/signin" className="border ml-28 border-white text-center  px-4 py-1 rounded-full font-bold hover:bg-white hover:text-black">
+          Sign In
         </Link>)}
 
         <div className="md:hidden">
@@ -169,7 +174,7 @@ const Navbar = () => {
         <Link to="/about" className="block py-2 px-4 hover:bg-gray-800">About</Link>
         <Link to="/projects" className="block py-2 px-4 hover:bg-gray-800">Projects</Link>
       </div>
-    </nav>
+    </nav></>
   );
 };
 

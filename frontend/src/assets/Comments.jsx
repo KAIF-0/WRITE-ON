@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Usercomments from './UserComments'
 import { useNavigate, useParams } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
 
 const Comments = ({ postId }) => {
     const { presentUser } = useSelector((state) => state.user)
@@ -20,6 +21,9 @@ const Comments = ({ postId }) => {
                 const data = await res.json()
                 if (res.ok) {
                     setcommentData(data)
+                }
+                if (!res.ok) {
+                    toast.error(data.errorMessage);
                 }
             } catch (error) {
                 console.log(error.message)
@@ -53,18 +57,21 @@ const Comments = ({ postId }) => {
                 setcommentData([data, ...commentData])
                 setComment('');
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+            }
 
         } catch (error) {
             console.log(error.message)
         }
     };
 
-    
+
 
     const handleLike = async (commentId) => {
         if (!presentUser) {
-            return;
             navigate('/signin')
+            return;
         }
         try {
             const res = await fetch(`/app/commentLike/${commentId}`,
@@ -74,9 +81,8 @@ const Comments = ({ postId }) => {
                         'Content-Type': 'application/json',
                     }
                 });
+            const data = await res.json();
             if (res.ok) {
-                const data = await res.json();
-
                 setcommentData(commentData.map((comment) => {
                     if (comment._id === commentId) {
                         return { ...comment, ...data };
@@ -85,8 +91,9 @@ const Comments = ({ postId }) => {
                     }
 
                 }));
-
-
+            }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
             }
 
         } catch (error) {
@@ -105,10 +112,8 @@ const Comments = ({ postId }) => {
                     },
                     body: JSON.stringify({ content })
                 });
+            const data = await res.json();
             if (res.ok) {
-                const data = await res.json();
-
-
                 setcommentData(commentData.map((comment) => {
                     if (comment._id === commentId) {
                         return { ...comment, content: content };
@@ -117,6 +122,9 @@ const Comments = ({ postId }) => {
                     }
 
                 }));
+            }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
             }
 
         } catch (error) {
@@ -131,11 +139,13 @@ const Comments = ({ postId }) => {
                 {
                     method: 'DELETE'
                 });
+            const data = await res.json();
             if (res.ok) {
-                const data = await res.json();
                 setcommentData(commentData.filter((e) => e._id !== commentId))
             }
-
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+            }
         } catch (error) {
             console.log(error.message)
         }
@@ -145,6 +155,7 @@ const Comments = ({ postId }) => {
 
     return (
         <div >
+            <Toaster />
             {presentUser ? (
                 <div>
                     <span className='flex text-sm justify-center items-center'>

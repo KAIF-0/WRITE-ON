@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Modal, Button } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
@@ -20,6 +21,9 @@ const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
                 if (res.ok) {
                     setuserData(data)
                 }
+                if (!res.ok) {
+                    toast.error(data.errorMessage);
+                  }
             } catch (error) {
                 console.log(error)
             }
@@ -38,6 +42,8 @@ const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
 
 
     return (
+        <>
+        <Toaster/>
         <div className="divide-y divide-gray-200">
             <div className="p-4 hover:bg-gray-50 transition-colors duration-200 shadow-sm">
                 <div className="flex space-x-3">
@@ -93,7 +99,7 @@ const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
 
 
                         <div className="flex items-center justify-between mt-2 space-x-2">
-                            <button className={`flex items-center text-xs ${comment.likes.includes(presentUser._id) ? "text-blue-700" : " text-gray-400" } hover:text-blue-500`} onClick={() => { onLike(comment._id) }}>
+                            <button className={`flex items-center text-xs ${comment.likes.includes(presentUser._id) ? "text-blue-700" : " text-gray-400" } hover:text-blue-700`} onClick={() => { onLike(comment._id) }}>
                                 <svg className='h-4 w-4 mr-1' fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                                 </svg>
@@ -110,7 +116,7 @@ const UserComments = ({ comment, onLike, onEdit, onDelete }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div></>
     )
 }
 

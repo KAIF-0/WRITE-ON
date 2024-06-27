@@ -3,22 +3,33 @@ import { useParams, Link } from 'react-router-dom'
 import CounterAction from '@/assets/Counteraction';
 import Comments from '@/assets/Comments';
 import RecentPost from '@/assets/RecentPost';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Post = () => {
     const { slug } = useParams();
     const [postData, setpostData] = useState({})
+    const [loading, setloading] = useState(false)
 
 
     const getPost = async () => {
+        setloading(true)
+        const toastId = toast.loading('Loading content...');
         try {
             const res = await fetch(`/app/get-posts?slug=${slug}`)
             const data = await res.json()
             if (res.ok) {
                 setpostData(data.posts[0])
+                setloading(false)
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+                setloading(false)
+              }
+            {!loading && toast.dismiss(toastId)}
         } catch (error) {
             console.log(error)
         }
+        
     }
 
     useEffect(() => {
@@ -27,6 +38,8 @@ const Post = () => {
 
 
     return (
+        <>
+        <Toaster/>
         <div className="max-w-screen-xl mx-2 my-10 flex flex-col justify-center items-center md:mx-auto bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
                 <h2 className="text-3xl uppercase font-semibold text-center text-gray-800">
@@ -66,6 +79,7 @@ const Post = () => {
             </div>
 
         </div>
+        </>
     )
 }
 

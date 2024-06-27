@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { FiArrowRight } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { signoutSuccess } from '@/redux/user/userSlice.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { BsFilePost } from "react-icons/bs";
@@ -10,10 +10,12 @@ import { FaUsers } from "react-icons/fa6";
 import { FaComments } from "react-icons/fa";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { useLocation } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const Sidebar = () => {
   const { presentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation()
   const [tab, setTab] = useState('')
@@ -38,6 +40,9 @@ const Sidebar = () => {
       if (res.ok) {
         dispatch(signoutSuccess());
       }
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
 
     } catch (error) {
       console.log(error.message)
@@ -45,6 +50,8 @@ const Sidebar = () => {
   };
 
   return (
+   <>
+   <Toaster/>
     <div className="flex flex-col w-full min-h-full md:h-full p-4 bg-gradient-to-r from-gray-700 to-gray-500 text-white md:w-64">
       <Link to="/dashboard?tab=profile" className={`flex cursor-pointer items-center justify-between p-2 mb-4 bg-gray-600 hover:bg-gray-800 ${tab === 'profile' && "bg-gray-800"} rounded-lg`}>
         <div className="flex items-center">
@@ -87,7 +94,7 @@ const Sidebar = () => {
         <FiArrowRight className="w-4 h-4 mr-2" />
         <button onClick={handleSignOut}>Sign Out</button>
       </div>
-    </div>
+    </div></>
   );
 };
 

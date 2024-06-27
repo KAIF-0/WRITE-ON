@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SearchPage = () => {
     const location = useLocation();
@@ -11,6 +12,7 @@ const SearchPage = () => {
     })
     const [searchResult, setSearchResult] = useState([])
     const [showMore, setshowMore] = useState(true)
+    const [loading, setloading] = useState(false)
 
     useEffect(() => {
         const query = new URLSearchParams(location.search);
@@ -22,15 +24,23 @@ const SearchPage = () => {
 
 
     const getPosts = async () => {
+        setloading(true)
+        const toastId = toast.loading('Loading content...');
         try {
             const res = await fetch(`/app/get-posts?search=${search.search}&sorting=${search.order}&category=${search.category}&limit=9`)
             const data = await res.json()
             if (res.ok) {
                 setSearchResult(data.posts)
+                setloading(false)
             }
             if (data.posts.length < 9) {
                 setshowMore(false);
             }
+            if (!res.ok) {
+                setloading(false)
+                toast.error(data.errorMessage);
+              }
+            {!loading && toast.dismiss(toastId)}
 
         } catch (error) {
             console.log(error.message)
@@ -51,6 +61,9 @@ const SearchPage = () => {
                 setSearchResult([...searchResult, ...data.posts])
                 setshowMore(false)
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+              }
         } catch (error) {
             console.log(error.message)
         }
@@ -60,6 +73,8 @@ const SearchPage = () => {
 
 
     return (
+        <>
+        <Toaster/>
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-lg flex flex-col">
                 {/* <form onSubmit={handleSearch}> */}
@@ -145,7 +160,7 @@ const SearchPage = () => {
                 </Button> : <></>}
 
             </div>
-        </div>
+        </div></>
     );
 };
 

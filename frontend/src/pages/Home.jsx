@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button'; // Assuming you have a Button component
 import RecentPost from '@/assets/RecentPost';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaChevronCircleRight, FaChevronCircleLeft } from "react-icons/fa";
 import {
   Tooltip,
@@ -9,12 +9,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import toast, { Toaster } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 
 const Home = () => {
   const [postData, setpostData] = useState([])
   const [count, setcount] = useState(0)
   const [end, setend] = useState('')
+  const navigate = useNavigate();
+  const {presentUser} = useSelector((state)=>state.user)
 
 
   const getPost = async () => {
@@ -25,6 +29,9 @@ const Home = () => {
         setpostData(data.posts);
         setend(data.totalPosts);
       } 
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +41,31 @@ const Home = () => {
     getPost();
   }, [count]);
 
+  const handleClick = async (slug) => {
+    if (!presentUser) {
+        toast.custom(
+            <div className="flex items-center justify-center w-full max-w-sm p-4 bg-red-600 text-white rounded-lg shadow-md">
+                <div className="flex-shrink-0">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636a9 9 0 11-12.728 0M12 9v4m0 4h.01"></path>
+                    </svg>
+                </div>
+                <div className="ml-3">
+                    <p className="font-semibold">Sign In Required</p>
+                </div>
+            </div>, {
+            duration: 1000,
+        }
+        )
+    }
+    else {
+        navigate(`/post/${slug}`)
+    }
+}
+
   return (
+    <>
+    <Toaster/>
     <div className="font-sans">
       {/* Header Section */}
       <header className="bg-gradient-to-r from-gray-800 to-gray-500 text-white pt-16">
@@ -51,7 +82,7 @@ const Home = () => {
           <img
             src="https://media.istockphoto.com/id/484912128/vector/abstract-technology-background.jpg?s=612x612&w=0&k=20&c=Hs-2X82hWuTCN30i3uLEhhkeCDtqag09WXlD5PXiv5o=" // Replace with actual image URL
             alt="Software Preview"
-            className="mx-auto relative top-52"
+            className="mx-auto relative top-44 w-[90%] md:top-52 md:w-[50%] "
           />
         </div>
       </header>
@@ -124,7 +155,7 @@ const Home = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <img src={e.image} alt={e.title} className="m-4 rounded h-60" />
+              <img src={e.image} alt={e.title} className="m-4 rounded h-60 w-60 object-cover" />
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -138,7 +169,10 @@ const Home = () => {
             </div>
             <div className=" line-clamp-3" dangerouslySetInnerHTML={{ __html: e.content }}></div>
             <div className='mt-7'>
-              <Link to={`/post/${e.slug}`} className="bg-gray-700 text-white px-6 py-3 rounded-full">Read More</Link>
+              {/* <Link to={`/post/${e.slug}`} className="bg-gray-700 text-white px-6 py-3 rounded-full">Read More</Link> */}
+              <Button onClick={() => { handleClick(e.slug) }} className=" mb-5 bg-gray-700">
+                            READ MORE
+              </Button>
             </div>
           </main>
 
@@ -146,7 +180,8 @@ const Home = () => {
       })}
 
 
-    </div>
+    </div></>
+    
   );
 }
 

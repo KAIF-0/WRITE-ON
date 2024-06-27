@@ -4,6 +4,7 @@ import { Modal, Button, Spinner } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const DashPosts = () => {
   const { presentUser } = useSelector((state) => state.user)
@@ -23,6 +24,9 @@ const DashPosts = () => {
       if (data.posts.length < 7) {
         setshowMore(false);
       }
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
     } catch (error) {
       console.log(error.message)
     }
@@ -41,6 +45,9 @@ const DashPosts = () => {
         setpostData([...postData, ...data.posts])
         setshowMore(false)
       }
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
     } catch (error) {
       console.log(error.message)
     }
@@ -53,10 +60,14 @@ const DashPosts = () => {
         {
           method: 'DELETE',
         });
+        const data = await res.json()
       if (res.ok) {
         setpostData(postData.filter((e) => e._id !== deleteId))
+        toast.success("Post deleted")
       }
-
+      if (!res.ok) {
+        toast.error(data.errorMessage);
+      }
     } catch (error) {
       console.log(error.message)
     }
@@ -69,6 +80,7 @@ const DashPosts = () => {
 
   return (
     <div>
+      <Toaster/>
       {postData.length > 0 ? <>
         <div className="container mx-auto p-4">
           <div className="hidden md:block overflow-x-auto  ">

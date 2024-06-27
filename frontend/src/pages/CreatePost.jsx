@@ -4,6 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, uploadBytesResumable, getStorage, ref } from "firebase/storage";
 import { app } from '@/firebase';
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const CreatePost = () => {
     const [form, setform] = useState({
@@ -13,8 +14,7 @@ const CreatePost = () => {
     });
     const navigate = useNavigate();
     const [file, setFile] = useState(null);
-    const [fileUploadProgress, setFileUploadProgress] = useState(null)
-    const [fileUploadError, setFileUploadError] = useState(null)
+    const [fileUploadProgress, setFileUploadProgress] = useState(false)
 
     
 
@@ -32,7 +32,11 @@ const CreatePost = () => {
 
             const data = await res.json()
             if(res.ok){
+                toast.success('Post Created Successfully')
                 navigate(`/post/${data.slug}`)
+            }
+            if(!res.ok){
+                toast.error(data.errorMessage)
             }
 
         } catch (error) {
@@ -41,6 +45,7 @@ const CreatePost = () => {
     }
 
     const handleUploadFile = async () => {
+        const toastId = toast.loading('Uploading image...');
         try {
             const storage = getStorage(app);
             const nestedFolderPath = 'blogPic'; // Replace with your nested folder path
@@ -49,30 +54,27 @@ const CreatePost = () => {
             const uploadTask = uploadBytesResumable(storageRef, file)
 
             uploadTask.on('state_changed', (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                setFileUploadProgress(progress.toFixed(0))
+                setFileUploadProgress(true)
             },
                 (error) => {
-                    setFileUploadError('Upload Fail...')
-                    setFileUploadProgress(null);
-
+                    setFileUploadProgress(false);
+                    toast.error('Image Upload Failed')
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setFileUploadError(null);
-                        setFileUploadProgress(null);
                         setform({ ...form, image: downloadURL })
+                        setFileUploadProgress(false);
                     });
-                    console.log("Image Uploaded Successfully...")
+                    {!fileUploadProgress && toast.dismiss(toastId)}
 
 
                 }
             );
         } catch (error) {
             console.log(error)
-            setFileUploadError("IMAGE UPLOAD FAIL...");
-            setFileUploadProgress(null);
+            setFileUploadProgress(false);
         }
+        
 
 
     }
@@ -83,8 +85,9 @@ const CreatePost = () => {
 
     return (
         <>
+         <Toaster/>
             <div className="flex my-10 justify-center mx-5 items-center min-h-screen bg-white text-white">
-                <div className="w-full max-w-screen-md bg-gray-700 p-6 rounded-lg shadow-lg">
+                <div className="w-full max-w-screen-md bg-gray-300 p-6 rounded-lg shadow-lg">
                     <h2 className="text-3xl font-semibold mb-4">Create a post</h2>
                     <form onSubmit={handlePublish} >
                             <input

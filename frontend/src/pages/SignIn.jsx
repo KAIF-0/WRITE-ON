@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInFailure, signInSuccess } from '@/redux/user/userSlice.js';
 import GoogleButton from '@/assets/oAuth';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignIn = () => {
   const { loading, errorMessage, presentUser } = useSelector((state) => state.user);
@@ -35,13 +36,16 @@ const SignIn = () => {
 
       const data = await res.json()
 
-      if (data.success === false) {
+      if (!res.ok) {
         dispatch(signInFailure(data.errorMessage));
+        toast.error(data.errorMessage);
       }
 
       if (data.success !== false) {
         dispatch(signInSuccess(data));
+        toast.success("SIGN IN SUCCESS");
         navigate('/dashboard?tab=profile')
+        
       }
 
     } catch (error) {
@@ -51,6 +55,7 @@ const SignIn = () => {
 
   return (
     <>
+    <Toaster/>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white shadow-md min-h-[70vh] flex justify-center items-center flex-col rounded-lg p-8 mx-5 max-w-md w-full">
           <div className="flex justify-center mb-6">

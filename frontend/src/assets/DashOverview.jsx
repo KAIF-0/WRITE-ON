@@ -5,6 +5,7 @@ import { LiaCommentsSolid } from "react-icons/lia";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const DashOverview = () => {
@@ -34,6 +35,9 @@ const DashOverview = () => {
                     }
                 }))
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+              }
 
         } catch (error) {
             console.log(error.message)
@@ -54,6 +58,9 @@ const DashOverview = () => {
                     }
                 }))
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+              }
         } catch (error) {
             console.log(error.message)
         }
@@ -74,6 +81,9 @@ const DashOverview = () => {
                     }
                 }))
             }
+            if (!res.ok) {
+                toast.error(data.errorMessage);
+              }
         } catch (error) {
             console.log(error.message)
         }
@@ -86,6 +96,8 @@ const DashOverview = () => {
     }, []) 
 
     return (
+        <>
+        <Toaster/>
         <div className="p-4 space-y-8">
             {/* Overview Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -174,7 +186,7 @@ const DashOverview = () => {
                 </div>
             </div>
 
-        </div>
+        </div></>
     );
 };
 
