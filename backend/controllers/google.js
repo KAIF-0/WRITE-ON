@@ -33,7 +33,6 @@ export const google = async (req, res, next) => {
             const token = jwt.sign(
                 { userid: newUser._id, isAdmin: newUser.isAdmin },
                 process.env.JWT_SECRET,
-                {expiresIn: "1d"}
             )
             const { password: pass, ...editedUser } = newUser._doc;
             res.status(200)

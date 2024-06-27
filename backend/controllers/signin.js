@@ -23,7 +23,6 @@ export const signIn = async (req, res, next)=>{
         const token = jwt.sign(
             {userid: getUser._id, isAdmin: getUser.isAdmin },
             process.env.JWT_SECRET,
-            {expiresIn: "1d"}
         )
 
         const {password: pass, ...editedUser} = getUser._doc;
